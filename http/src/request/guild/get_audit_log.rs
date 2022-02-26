@@ -45,7 +45,7 @@ struct GetAuditLogFields {
 ///
 /// for entry in audit_log.entries {
 ///     println!("ID: {}", entry.id);
-///     println!("  Action Type: {}", entry.action_type as u8);
+///     println!("  Action Type: {}", u8::from(entry.action_type));
 ///     println!("  Changes:");
 ///
 ///     for change in entry.changes {
@@ -134,7 +134,7 @@ impl<'a> GetAuditLog<'a> {
 impl TryIntoRequest for GetAuditLog<'_> {
     fn try_into_request(self) -> Result<Request, HttpError> {
         Ok(Request::from_route(&Route::GetAuditLogs {
-            action_type: self.fields.action_type.map(|x| x as u64),
+            action_type: self.fields.action_type.map(|x| u8::from(x) as u64),
             before: self.fields.before,
             guild_id: self.guild_id.get(),
             limit: self.fields.limit,

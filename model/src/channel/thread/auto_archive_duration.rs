@@ -11,7 +11,7 @@ pub enum AutoArchiveDuration {
     Day,
     ThreeDays,
     Week,
-    Unknown { value: u16 },
+    Other { value: u16 },
 }
 
 impl AutoArchiveDuration {
@@ -30,7 +30,7 @@ impl AutoArchiveDuration {
             Self::Day => 1440,
             Self::ThreeDays => 4320,
             Self::Week => 10080,
-            Self::Unknown { value } => value,
+            Self::Other { value } => value,
         }
     }
 }
@@ -42,7 +42,7 @@ impl From<u16> for AutoArchiveDuration {
             1440 => Self::Day,
             4320 => Self::ThreeDays,
             10080 => Self::Week,
-            value => Self::Unknown { value },
+            value => Self::Other { value },
         }
     }
 }
@@ -92,7 +92,7 @@ mod tests {
     #[test]
     fn test_unknown_conversion() {
         assert_eq!(
-            AutoArchiveDuration::Unknown { value: 250 },
+            AutoArchiveDuration::Other { value: 250 },
             AutoArchiveDuration::from(250)
         );
     }

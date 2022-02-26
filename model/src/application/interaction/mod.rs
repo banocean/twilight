@@ -401,7 +401,7 @@ impl<'de> Visitor<'de> for InteractionVisitor {
 mod test {
     use crate::{
         application::{
-            command::{CommandOptionType, CommandType},
+            command::CommandType,
             interaction::{
                 application_command::{
                     ApplicationCommand, CommandData, CommandDataOption,
@@ -550,7 +550,7 @@ mod test {
                 Token::Str("name"),
                 Token::Str("member"),
                 Token::Str("type"),
-                Token::U8(CommandOptionType::User as u8),
+                Token::U8(6),
                 Token::Str("value"),
                 Token::NewtypeStruct { name: "Id" },
                 Token::Str("600"),

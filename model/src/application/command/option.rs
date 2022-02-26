@@ -4,7 +4,6 @@ use serde::{
     ser::Serializer,
     Deserialize, Serialize,
 };
-use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::{
     cmp::Eq,
     fmt::{Formatter, Result as FmtResult},
@@ -34,6 +33,7 @@ pub enum CommandOption {
     Mentionable(BaseCommandOptionData),
     Number(NumberCommandOptionData),
     Attachment(BaseCommandOptionData),
+    Unknown(u8)
 }
 
 impl CommandOption {
@@ -50,6 +50,7 @@ impl CommandOption {
             CommandOption::Mentionable(_) => CommandOptionType::Mentionable,
             CommandOption::Number(_) => CommandOptionType::Number,
             CommandOption::Attachment(_) => CommandOptionType::Attachment,
+            CommandOption::Unknown(unknown) => CommandOptionType::Unknown(*unknown)
         }
     }
 
@@ -65,13 +66,14 @@ impl CommandOption {
             | CommandOption::SubCommand(_)
             | CommandOption::SubCommandGroup(_)
             | CommandOption::Channel(_)
-            | CommandOption::Attachment(_) => false,
+            | CommandOption::Attachment(_)
+            | CommandOption::Unknown(_) => false,
         }
     }
 
     pub const fn is_required(&self) -> bool {
         match self {
-            CommandOption::SubCommand(_) | CommandOption::SubCommandGroup(_) => false,
+            CommandOption::SubCommand(_) | CommandOption::SubCommandGroup(_) | CommandOption::Unknown(_) => false,
             CommandOption::String(data) => data.required,
             CommandOption::Integer(data) | CommandOption::Number(data) => data.required,
             CommandOption::Channel(data) => data.required,
@@ -179,6 +181,18 @@ impl Serialize for CommandOption {
                 required: data.required,
                 kind: self.kind(),
             },
+            CommandOption::Unknown(_) => CommandOptionEnvelope {
+                autocomplete: false,
+                channel_types: None,
+                choices: None,
+                description: "",
+                max_value: None,
+                min_value: None,
+                name: "",
+                options: None,
+                required: false,
+                kind: self.kind()
+            }
         };
 
         envelope.serialize(serializer)
@@ -421,6 +435,7 @@ impl<'de> Visitor<'de> for OptionVisitor {
                 name,
                 required,
             }),
+            CommandOptionType::Unknown(unknown) => {CommandOption::Unknown(unknown)}
         })
     }
 }
@@ -566,24 +581,64 @@ pub enum CommandOptionValue {
 }
 
 /// Type of a [`CommandOption`].
-#[derive(Clone, Copy, Debug, Deserialize_repr, Eq, Hash, PartialEq, Serialize_repr)]
-#[repr(u8)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(from="u8", into="u8")]
 pub enum CommandOptionType {
-    SubCommand = 1,
-    SubCommandGroup = 2,
-    String = 3,
-    Integer = 4,
-    Boolean = 5,
-    User = 6,
-    Channel = 7,
-    Role = 8,
-    Mentionable = 9,
-    Number = 10,
-    Attachment = 11,
+    SubCommand,
+    SubCommandGroup,
+    String,
+    Integer,
+    Boolean,
+    User,
+    Channel,
+    Role,
+    Mentionable,
+    Number ,
+    Attachment ,
+
+    Unknown(u8)
+}
+
+impl From<u8> for CommandOptionType {
+    fn from(value: u8) -> Self {
+        match value {
+            1 => CommandOptionType::SubCommand,
+            2 => CommandOptionType::SubCommandGroup,
+            3 => CommandOptionType::String,
+            4 => CommandOptionType::Integer,
+            5 => CommandOptionType::Boolean,
+            6 => CommandOptionType::User,
+            7 => CommandOptionType::Channel,
+            8 => CommandOptionType::Role,
+            9 => CommandOptionType::Mentionable,
+            10 => CommandOptionType::Number,
+            11 => CommandOptionType::Attachment,
+            unknown => CommandOptionType::Unknown(unknown)
+        }
+    }
+}
+
+impl From<CommandOptionType> for u8 {
+    fn from(value: CommandOptionType) -> Self {
+        match value {
+            CommandOptionType::SubCommand => 1,
+            CommandOptionType::SubCommandGroup => 2,
+            CommandOptionType::String => 3,
+            CommandOptionType::Integer => 4,
+            CommandOptionType::Boolean => 5,
+            CommandOptionType::User => 6,
+            CommandOptionType::Channel => 7,
+            CommandOptionType::Role => 8,
+            CommandOptionType::Mentionable => 9,
+            CommandOptionType::Number => 10,
+            CommandOptionType::Attachment => 11,
+            CommandOptionType::Unknown(unknown) =>unknown,
+        }
+    }
 }
 
 impl CommandOptionType {
-    pub const fn kind(self) -> &'static str {
+    pub fn kind(self) -> &'static str {
         match self {
             CommandOptionType::SubCommand => "SubCommand",
             CommandOptionType::SubCommandGroup => "SubCommandGroup",
@@ -596,6 +651,7 @@ impl CommandOptionType {
             CommandOptionType::Mentionable => "Mentionable",
             CommandOptionType::Number => "Number",
             CommandOptionType::Attachment => "Attachment",
+            CommandOptionType::Unknown(_) => "Unknown type",
         }
     }
 }

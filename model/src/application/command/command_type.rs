@@ -1,20 +1,23 @@
-use serde_repr::{Deserialize_repr, Serialize_repr};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, Deserialize_repr, Eq, Hash, PartialEq, Serialize_repr)]
-#[repr(u8)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(from="u8", into="u8")]
 pub enum CommandType {
     /// Slash command.
     ///
     /// Text-based command that appears when a user types `/`.
-    ChatInput = 1,
+    ChatInput,
     /// UI-based command.
     ///
     /// Appears when a user right clicks or taps om a user.
-    User = 2,
+    User,
     /// UI-based command.
     ///
     /// Appears when a user right clicks or taps on a message.
-    Message = 3,
+    Message,
+
+    /// Not yet supported
+    Unknown(u8)
 }
 
 impl CommandType {
@@ -23,6 +26,29 @@ impl CommandType {
             Self::ChatInput => "ChatInput",
             Self::User => "User",
             Self::Message => "Message",
+            CommandType::Unknown(_) => "Unknown interaction type"
+        }
+    }
+}
+
+impl From<u8> for CommandType {
+    fn from(value: u8) -> Self {
+        match value {
+            1 => Self::ChatInput,
+            2 => Self::User,
+            3 => Self::Message,
+            unknown => Self::Unknown(unknown)
+        }
+    }
+}
+
+impl From<CommandType> for u8 {
+    fn from(value: CommandType) -> Self {
+        match value {
+            CommandType::ChatInput => 1,
+            CommandType::User => 2,
+            CommandType::Message => 3,
+            CommandType::Unknown(unknown) => unknown
         }
     }
 }
@@ -60,5 +86,6 @@ mod tests {
         assert_eq!("ChatInput", CommandType::ChatInput.kind());
         assert_eq!("User", CommandType::User.kind());
         assert_eq!("Message", CommandType::Message.kind());
+        assert_eq!("Unknown interaction type", CommandType::Unknown(99).kind());
     }
 }

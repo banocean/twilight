@@ -91,7 +91,7 @@ mod tests {
                     len: 6,
                 },
                 Token::Str("action_type"),
-                Token::U8(AuditLogEventType::GuildUpdate as u8),
+                Token::U8(1),
                 Token::Str("changes"),
                 Token::Seq { len: Some(1) },
                 Token::Struct {

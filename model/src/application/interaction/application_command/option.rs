@@ -61,6 +61,7 @@ impl Serialize for CommandDataOption {
                     state.serialize_field("options", s)?
                 }
             }
+            CommandOptionValue::Unknown(_) => {}
         }
 
         state.end()
@@ -298,6 +299,9 @@ impl<'de> Deserialize<'de> for CommandDataOption {
                             return Err(DeError::invalid_type(make_unexpected(&val), &"user id"));
                         }
                     }
+                    CommandOptionType::Unknown(unknown) => {
+                        CommandOptionValue::Unknown(unknown)
+                    }
                 };
 
                 Ok(CommandDataOption {
@@ -326,6 +330,7 @@ pub enum CommandOptionValue {
     SubCommand(Vec<CommandDataOption>),
     SubCommandGroup(Vec<CommandDataOption>),
     User(Id<UserMarker>),
+    Unknown(u8)
 }
 
 impl CommandOptionValue {
@@ -342,6 +347,7 @@ impl CommandOptionValue {
             CommandOptionValue::SubCommand(_) => CommandOptionType::SubCommand,
             CommandOptionValue::SubCommandGroup(_) => CommandOptionType::SubCommandGroup,
             CommandOptionValue::User(_) => CommandOptionType::User,
+            CommandOptionValue::Unknown(unknown) => CommandOptionType::Unknown(*unknown)
         }
     }
 }
@@ -350,7 +356,7 @@ impl CommandOptionValue {
 mod tests {
     use crate::{
         application::{
-            command::{CommandOptionType, CommandType, Number},
+            command::{CommandType, Number},
             interaction::application_command::{
                 CommandData, CommandDataOption, CommandOptionValue,
             },
@@ -382,7 +388,7 @@ mod tests {
                 Token::Str("name"),
                 Token::Str("permissions"),
                 Token::Str("type"),
-                Token::U8(CommandType::ChatInput as u8),
+                Token::U8(1),
                 Token::StructEnd,
             ],
         )
@@ -416,7 +422,7 @@ mod tests {
                 Token::Str("name"),
                 Token::Str("photo"),
                 Token::Str("type"),
-                Token::U8(CommandType::ChatInput as u8),
+                Token::U8(1),
                 Token::Str("options"),
                 Token::Seq { len: Some(1) },
                 Token::Struct {
@@ -426,7 +432,7 @@ mod tests {
                 Token::Str("name"),
                 Token::Str("cat"),
                 Token::Str("type"),
-                Token::U8(CommandOptionType::SubCommand as u8),
+                Token::U8(1),
                 Token::StructEnd,
                 Token::SeqEnd,
                 Token::StructEnd,
@@ -452,7 +458,7 @@ mod tests {
                 Token::Str("name"),
                 Token::Str("opt"),
                 Token::Str("type"),
-                Token::U8(CommandOptionType::Number as u8),
+                Token::U8(10),
                 Token::Str("value"),
                 Token::I64(5),
                 Token::StructEnd,

@@ -10,8 +10,8 @@ mod message;
 mod pack;
 
 pub use self::{
-    format_type::{StickerFormatType, StickerFormatTypeConversionError},
-    kind::{StickerType, StickerTypeConversionError},
+    format_type::{StickerFormatType},
+    kind::{StickerType},
     message::MessageSticker,
     pack::StickerPack,
 };
@@ -125,7 +125,7 @@ mod tests {
                 Token::Some,
                 Token::Str("foo2"),
                 Token::Str("format_type"),
-                Token::U8(StickerFormatType::Png as u8),
+                Token::U8(1),
                 Token::Str("id"),
                 Token::NewtypeStruct { name: "Id" },
                 Token::Str("1"),
@@ -188,7 +188,7 @@ mod tests {
                 Token::Some,
                 Token::Str("sticker"),
                 Token::Str("format_type"),
-                Token::U8(StickerFormatType::Png as u8),
+                Token::U8(1),
                 Token::Str("guild_id"),
                 Token::Some,
                 Token::NewtypeStruct { name: "Id" },

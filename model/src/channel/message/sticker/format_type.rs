@@ -1,61 +1,43 @@
-use serde_repr::{Deserialize_repr, Serialize_repr};
-use std::{
-    error::Error,
-    fmt::{Display, Formatter, Result as FmtResult},
-};
+use serde::{Deserialize, Serialize};
 
 /// Format type of a [`Sticker`].
 ///
 /// [`Sticker`]: super::Sticker
-#[derive(Clone, Copy, Debug, Deserialize_repr, Eq, Hash, PartialEq, Serialize_repr)]
-#[repr(u8)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(from="u8", into="u8")]
 pub enum StickerFormatType {
     /// Sticker format is a PNG.
-    Png = 1,
+    Png,
     /// Sticker format is an APNG.
-    Apng = 2,
+    Apng,
     /// Sticker format is a LOTTIE.
-    Lottie = 3,
+    Lottie,
+    /// Sticker format is not known.
+    Unknown(u8)
 }
 
-impl TryFrom<u8> for StickerFormatType {
-    type Error = StickerFormatTypeConversionError;
+impl From<u8> for StickerFormatType {
 
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
-        Ok(match value {
+    fn from(value: u8) -> Self {
+        match value {
             1 => StickerFormatType::Png,
             2 => StickerFormatType::Apng,
             3 => StickerFormatType::Lottie,
-            _ => return Err(StickerFormatTypeConversionError { value }),
-        })
+            unknown => StickerFormatType::Unknown(unknown),
+        }
     }
 }
 
-/// Converting into a [`StickerFormatType`] failed.
-///
-/// This occurs only when the input value doesn't map to a sticker type variant.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct StickerFormatTypeConversionError {
-    value: u8,
-}
-
-impl<'a> StickerFormatTypeConversionError {
-    /// Retrieve a copy of the input value that couldn't be parsed.
-    pub const fn value(&self) -> u8 {
-        self.value
+impl From<StickerFormatType> for u8 {
+    fn from(value: StickerFormatType) -> Self {
+        match value {
+            StickerFormatType::Png => 1,
+            StickerFormatType::Apng => 2,
+            StickerFormatType::Lottie => 3,
+            StickerFormatType::Unknown(unknown) => unknown
+        }
     }
 }
-
-impl Display for StickerFormatTypeConversionError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.write_str("Value (")?;
-        Display::fmt(&self.value, f)?;
-
-        f.write_str(") doesn't match a sticker type")
-    }
-}
-
-impl Error for StickerFormatTypeConversionError {}
 
 #[cfg(test)]
 mod tests {
@@ -67,21 +49,26 @@ mod tests {
         serde_test::assert_tokens(&StickerFormatType::Png, &[Token::U8(1)]);
         serde_test::assert_tokens(&StickerFormatType::Apng, &[Token::U8(2)]);
         serde_test::assert_tokens(&StickerFormatType::Lottie, &[Token::U8(3)]);
+        serde_test::assert_tokens(&StickerFormatType::Unknown(99), &[Token::U8(99)]);
     }
 
     #[test]
     fn test_conversions() {
         assert_eq!(
-            StickerFormatType::try_from(1).unwrap(),
+            StickerFormatType::from(1),
             StickerFormatType::Png
         );
         assert_eq!(
-            StickerFormatType::try_from(2).unwrap(),
+            StickerFormatType::from(2),
             StickerFormatType::Apng
         );
         assert_eq!(
-            StickerFormatType::try_from(3).unwrap(),
+            StickerFormatType::from(3),
             StickerFormatType::Lottie
+        );
+        assert_eq!(
+            StickerFormatType::from(99),
+            StickerFormatType::Unknown(99)
         );
     }
 }

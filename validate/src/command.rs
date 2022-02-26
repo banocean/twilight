@@ -232,7 +232,7 @@ pub fn command(value: &Command) -> Result<(), CommandValidationError> {
 
     match kind {
         CommandType::ChatInput => self::chat_input_name(name),
-        CommandType::User | CommandType::Message => self::name(name),
+        CommandType::User | CommandType::Message | CommandType::Unknown(_) => self::name(name),
     }
 }
 
@@ -394,7 +394,7 @@ fn name_characters(value: impl AsRef<str>) -> Result<(), CommandValidationError>
 /// [`OptionNameCharacterInvalid`]: CommandValidationErrorType::OptionNameCharacterInvalid
 pub fn option(option: &CommandOption) -> Result<(), CommandValidationError> {
     let (description, name) = match option {
-        CommandOption::SubCommand(_) | CommandOption::SubCommandGroup(_) => return Ok(()),
+        CommandOption::SubCommand(_) | CommandOption::SubCommandGroup(_) | CommandOption::Unknown(_) => return Ok(()),
         CommandOption::String(data) => (&data.description, &data.name),
         CommandOption::Integer(data) | CommandOption::Number(data) => {
             (&data.description, &data.name)

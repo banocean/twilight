@@ -5,7 +5,6 @@ use crate::id::{
     Id,
 };
 use serde::{de::Deserializer, ser::Serializer, Deserialize, Serialize};
-use serde_repr::{Deserialize_repr, Serialize_repr};
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct GuildCommandPermissions {
@@ -25,6 +24,7 @@ pub struct CommandPermissions {
 pub enum CommandPermissionsType {
     Role(Id<RoleMarker>),
     User(Id<UserMarker>),
+    Unknown(u8)
 }
 
 #[derive(Deserialize, Serialize)]
@@ -35,11 +35,32 @@ struct CommandPermissionsData {
     permission: bool,
 }
 
-#[derive(Clone, Debug, Deserialize_repr, Eq, PartialEq, Serialize_repr)]
-#[repr(u8)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(from="u8", into="u8")]
 enum CommandPermissionsDataType {
-    Role = 1,
-    User = 2,
+    Role,
+    User,
+    Unknown(u8)
+}
+
+impl From<u8> for CommandPermissionsDataType {
+    fn from(value: u8) -> Self {
+        match value {
+            1 => CommandPermissionsDataType::Role,
+            2 => CommandPermissionsDataType::User,
+            unknown => CommandPermissionsDataType::Unknown(unknown),
+        }
+    }
+}
+
+impl From<CommandPermissionsDataType> for u8 {
+    fn from(value: CommandPermissionsDataType) -> Self {
+        match value {
+            CommandPermissionsDataType::Role => 1,
+            CommandPermissionsDataType::User => 2,
+            CommandPermissionsDataType::Unknown(unknown) => unknown
+        }
+    }
 }
 
 impl<'de> Deserialize<'de> for CommandPermissions {
@@ -66,6 +87,7 @@ impl<'de> Deserialize<'de> for CommandPermissions {
 
                 CommandPermissionsType::User(id)
             }
+            CommandPermissionsDataType::Unknown(unknown) => CommandPermissionsType::Unknown(unknown),
         };
 
         Ok(Self {
@@ -81,10 +103,12 @@ impl Serialize for CommandPermissions {
             id: match self.id {
                 CommandPermissionsType::Role(role_id) => role_id.cast(),
                 CommandPermissionsType::User(user_id) => user_id.cast(),
+                CommandPermissionsType::Unknown(_) => return Err(serde::ser::Error::custom("Unknown CommandPermissionsType!"))
             },
             kind: match self.id {
                 CommandPermissionsType::Role(_) => CommandPermissionsDataType::Role,
                 CommandPermissionsType::User(_) => CommandPermissionsDataType::User,
+                CommandPermissionsType::Unknown(unknown) => CommandPermissionsDataType::Unknown(unknown),
             },
             permission: self.permission,
         };

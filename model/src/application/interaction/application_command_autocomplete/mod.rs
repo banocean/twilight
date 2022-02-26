@@ -140,7 +140,7 @@ mod tests {
                 Token::Str("name"),
                 Token::Str("search"),
                 Token::Str("type"),
-                Token::U8(CommandType::ChatInput as u8),
+                Token::U8(1),
                 Token::Str("options"),
                 Token::Seq { len: Some(1) },
                 Token::Struct {
@@ -150,7 +150,7 @@ mod tests {
                 Token::Str("focused"),
                 Token::Bool(true),
                 Token::Str("type"),
-                Token::U8(ApplicationCommandAutocompleteDataOptionType::Integer as u8),
+                Token::U8(4),
                 Token::Str("name"),
                 Token::Str("issue"),
                 Token::Str("value"),

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/cache/in-memory/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/command-parser/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/command-parser/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/embed-builder/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gateway-queue/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gateway/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gateway/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/http-ratelimiting/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/http-ratelimiting/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/http/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/http/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lavalink/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mention/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/mention/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/model/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/model/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/standby/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/twilight/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/util/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/validate/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

@@ -563,6 +563,13 @@ fn component_inner(component: &Component) -> Result<(), ComponentValidationError
                 self::component_text_input_value(value)?;
             }
         }
+        Component::Unknown(unknown) => {
+            return Err(ComponentValidationError {
+                kind: ComponentValidationErrorType::InvalidChildComponent {
+                    kind: ComponentType::Unknown(*unknown),
+                },
+            })
+        }
     }
 
     Ok(())
