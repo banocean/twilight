@@ -16,7 +16,7 @@ pub struct PermissionOverwrite {
 
 /// Type of a permission overwrite target.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum PermissionOverwriteType {
     /// Permission overwrite targets an individual member.
     Member,

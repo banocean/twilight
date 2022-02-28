@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// [`Sticker`]: super::Sticker
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum StickerFormatType {
     /// Sticker format is a PNG.
     Png,

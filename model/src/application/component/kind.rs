@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// [Discord Docs/Message Components]: https://discord.com/developers/docs/interactions/message-components#component-types
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum ComponentType {
     /// Component is an [`ActionRow`].
     ///
@@ -93,7 +93,7 @@ mod tests {
     use super::*;
     use serde::{Deserialize, Serialize};
     use serde_test::Token;
-    use static_assertions::{assert_impl_all};
+    use static_assertions::assert_impl_all;
     use std::{fmt::Debug, hash::Hash};
 
     assert_impl_all!(

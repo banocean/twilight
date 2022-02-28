@@ -36,7 +36,7 @@ struct CommandPermissionsData {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 enum CommandPermissionsDataType {
     Role,
     User,

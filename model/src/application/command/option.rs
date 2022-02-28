@@ -581,8 +581,8 @@ pub enum CommandOptionValue {
 }
 
 /// Type of a [`CommandOption`].
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize, )]
+#[serde(from = "u8", into = "u8")]
 pub enum CommandOptionType {
     SubCommand,
     SubCommandGroup,

@@ -38,7 +38,7 @@ pub struct Button {
 ///
 /// [the Discord Docs/Button Object]: https://discord.com/developers/docs/interactions/message-components#button-object-button-styles
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum ButtonStyle {
     /// Button indicates a primary action.
     ///

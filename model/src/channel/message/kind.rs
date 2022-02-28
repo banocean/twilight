@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum MessageType {
     Regular,
     RecipientAdd,
@@ -99,7 +99,7 @@ impl From<MessageType> for u8 {
 
 #[cfg(test)]
 mod tests {
-    use super::{MessageType};
+    use super::MessageType;
     use serde_test::Token;
 
     #[test]

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(
     Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize, Ord,
 )]
-#[serde(from="u8", into="u8")]
+#[serde(from = "u8", into = "u8")]
 pub enum IntegrationExpireBehavior {
     /// Remove the role when the integration expires.
     RemoveRole,
