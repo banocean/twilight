@@ -33,7 +33,7 @@ jobs:
           override: true
 
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Output processor info
         run: cat /proc/cpuinfo
@@ -81,7 +81,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Add problem matchers
         run: echo "::add-matcher::.github/rust.json"
@@ -130,7 +130,7 @@ jobs:
           profile: minimal
 
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Add problem matchers
         run: echo "::add-matcher::.github/rust.json"
@@ -155,7 +155,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Add problem matchers
         run: echo "::add-matcher::.github/rust.json"
@@ -179,7 +179,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Add problem matchers
         run: echo "::add-matcher::.github/rust.json"
